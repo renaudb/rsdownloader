@@ -10,7 +10,7 @@ Version = 0.1
 #          seperated by a newline character. Use the "-h" option to see all other
 #          options.
 #
-# Depend.: wget
+# Depend.: ruby, wget
 #
 # Example: ./rsdownloader.rb --dir=/home/user/Downloads http://rapidshare.com/files/12341234/example.rar
 
@@ -19,19 +19,23 @@ require 'net/http'
 require 'optparse'
 require 'ostruct'
 
+#RSDownload objects represents a single download from RapidShare
 class RSDownload
   attr_accessor :url, :dir, :name, :header
 
+  #Create a new instance of RSDownload
   def initialize(url,dir,header)
     @url = url
     @dir = dir
     @header = header
   end
 
+  #Test if the given URL is valid and operational
   def test
     return Net::HTTP.get_response(URI.parse(url)).body.include?("<h1>FILE DOWNLOAD</h1>")
   end
 
+  #Execute the download of the RSDownload object
   def download
     wait = 0
     url = URI.parse(@url)
@@ -55,6 +59,7 @@ class RSDownload
     IO.popen("wget -c #{"-q" if !$verbosity} --user-agent=\"#{@header['User-Agent']}\" --directory-prefix=\"#{@dir}\" #{url}"){|f|} 
   end
 
+  #Wait a certain time and display a counter
   def wait(time,message)
     t = Time.at(time-68400)
     $stdout.sync = true
@@ -68,7 +73,10 @@ class RSDownload
   end
 end
 
+#Rapidshare objects represent a full download session
 class RapidShare
+
+  #Create a new instance of RapidShare
   def initialize(options)
     @options = options
     @files = []
@@ -79,6 +87,7 @@ class RapidShare
     $verbose = @options.verbose
   end
 
+  #Start the download session
   def start
     $stdout = File.new('/dev/null', 'w') if !$verbose
     puts ":: Initializing the download session..."
@@ -97,6 +106,7 @@ class RapidShare
     self.download
   end
 
+  #Load the downloads in memory
   def load
     @options.files.each do |file|
       if file =~ /http:\/\/(.+)/
@@ -129,6 +139,7 @@ class RapidShare
     end
   end
 
+  #Execute the downloads
   def download
     @files.each do |f|
       f.download
@@ -136,7 +147,10 @@ class RapidShare
   end
 end
 
+#This class hold the arguments parsing information
 class OptParser
+
+  #Parse the command-line arguments
   def self.parse(args)
     options = OpenStruct.new
     options.verbose = true
@@ -188,6 +202,7 @@ class OptParser
   end
 end
 
+#The main program, it creates a download session and execute it
 rs = RapidShare.new(OptParser.parse(ARGV))
 rs.start
 
