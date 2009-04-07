@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# RSDownloader - A small script to download files easily from http://rapidshare.com
+# RSDownloader - A small script to easily download files from http://rapidshare.com
 # Copyright (c) 2009 Renaud "Rhino" Bourassa <To.Rhino@gmail.com>
 #
 Version = 0.1
@@ -8,7 +8,9 @@ Version = 0.1
 # Usage:   Pass a list, separated by spaces, of links and/or files of links of the files 
 #          you want to download as argument. Each links in a file of links must be
 #          seperated by a newline character. Use the "-h" option to see all other
-#          options. This script require wget.
+#          options.
+#
+# Depend.: wget
 #
 # Example: ./rsdownloader.rb --dir=/home/user/Downloads http://rapidshare.com/files/12341234/example.rar
 
