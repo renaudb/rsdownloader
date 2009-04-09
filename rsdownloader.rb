@@ -56,7 +56,11 @@ class RSDownload
 
     self.wait(wait,"The download will start in %H:%M:%S")
 
-    IO.popen("wget -c #{"-q" if !$verbosity} --user-agent=\"#{@header['User-Agent']}\" --directory-prefix=\"#{@dir}\" #{url}"){|f|} 
+    cmd = "wget -c --user-agent=\"#{@header['User-Agent']}\""
+    cmd += " -q" if !$verbose
+    cmd += " --directory-prefix=\"#{@dir}\"" if @dir
+
+    IO.popen(cmd + " #{url}"){|f|} 
   end
 
   #Wait a certain time and display a counter
@@ -68,7 +72,7 @@ class RSDownload
       sleep 1
       t -= 1
     end
-    print "\r"
+    print "\r" + " " * message.length
     $stdout.sync = false
   end
 end
@@ -98,11 +102,12 @@ class RapidShare
       puts "Testing the files:"
     end
     self.load
-    if @options.files.length == 1
+    if @files.length == 1
       puts ":: Starting the download..."
     else
       puts ":: Starting the downloads..."
     end
+
     self.download
   end
 
