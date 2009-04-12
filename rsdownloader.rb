@@ -14,6 +14,18 @@ Version = 0.1
 #
 # Example: ./rsdownloader.rb --dir=/home/user/Downloads http://rapidshare.com/files/12341234/example.rar
 
+# ----------------------------------------------------------
+# CONFIGURATION
+# ----------------------------------------------------------
+
+USERAGENT  = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009033017 GranParadiso/3.0.8"
+DIRECTORY  = "/home/rhino/Downloads"
+VERBOSE    = true
+
+# ----------------------------------------------------------
+# DOWNLOAD SCRIPT
+# ----------------------------------------------------------
+
 require 'uri'
 require 'net/http'
 require 'optparse'
@@ -72,7 +84,7 @@ class RSDownload
       sleep 1
       t -= 1
     end
-    print "\r" + " " * message.length
+    print "\r" + " " * message.length + "\r"
     $stdout.sync = false
   end
 end
@@ -158,9 +170,21 @@ class OptParser
   #Parse the command-line arguments
   def self.parse(args)
     options = OpenStruct.new
-    options.verbose = true
-    options.useragent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009033017 GranParadiso/3.0.8"
-    options.directory = Dir.pwd
+    if VERBOSE.nil?
+      options.verbose = true
+    else
+      options.verbose = VERBOSE
+    end
+    if USERAGENT.nil?
+      options.useragent = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko/2009033017 GranParadiso/3.0.8"
+    else
+      options.useragent = USERAGENT
+    end
+    if DIRECTORY.nil?
+      options.directory = Dir.pwd
+    else
+      options.directory = DIRECTORY
+    end
     
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: rapidshare.rb [OPTION] FILES"

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>download (RSDownload)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rsdownloader.rb, line 51</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">download</span>
+    <span class="ruby-identifier">wait</span> = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">url</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-ivar">@url</span>)
+
+    <span class="ruby-identifier">http</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">host</span>)
+    <span class="ruby-identifier">response</span> = <span class="ruby-identifier">http</span>.<span class="ruby-identifier">request_get</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">path</span>,<span class="ruby-ivar">@header</span>)
+    <span class="ruby-identifier">url</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-regexp re">/&lt;form id=&quot;ff&quot; action=&quot;(.+)&quot; method=&quot;post&quot;&gt;/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>)[<span class="ruby-value">1</span>])
+
+    <span class="ruby-identifier">http</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">host</span>)
+    <span class="ruby-identifier">data</span> = <span class="ruby-value str">&quot;dl.start=Free&quot;</span>
+    <span class="ruby-identifier">response</span> = <span class="ruby-identifier">http</span>.<span class="ruby-identifier">request_post</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">path</span>,<span class="ruby-identifier">data</span>,<span class="ruby-ivar">@header</span>)
+    <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">wait</span> = <span class="ruby-regexp re">/Or try again in about (.+) minutes\./</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>) <span class="ruby-keyword kw">do</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">wait</span>(<span class="ruby-identifier">wait</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span><span class="ruby-operator">*</span><span class="ruby-value">60</span>,<span class="ruby-value str">&quot;The next download will start in approximately %H:%M:%S&quot;</span>)
+      <span class="ruby-identifier">response</span> = <span class="ruby-identifier">http</span>.<span class="ruby-identifier">request_post</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">path</span>,<span class="ruby-identifier">data</span>,<span class="ruby-ivar">@header</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">url</span> = <span class="ruby-constant">URI</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-regexp re">/&lt;input checked type=&quot;radio&quot; name=&quot;mirror&quot; onclick=&quot;document.dlf.action=\\'(.+)\\';&quot; \/&gt;/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>)[<span class="ruby-value">1</span>])
+    <span class="ruby-identifier">wait</span> = <span class="ruby-regexp re">/var c=(.+);/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">response</span>.<span class="ruby-identifier">body</span>)[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">wait</span>(<span class="ruby-identifier">wait</span>,<span class="ruby-value str">&quot;The download will start in %H:%M:%S&quot;</span>)
+
+    <span class="ruby-identifier">cmd</span> = <span class="ruby-node">&quot;wget -c --user-agent=\&quot;#{@header['User-Agent']}\&quot;&quot;</span>
+    <span class="ruby-identifier">cmd</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot; -q&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">$verbose</span>
+    <span class="ruby-identifier">cmd</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot; --directory-prefix=\&quot;#{@dir}\&quot;&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@dir</span>
+
+    <span class="ruby-constant">IO</span>.<span class="ruby-identifier">popen</span>(<span class="ruby-identifier">cmd</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot; #{url}&quot;</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>} 
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
