@@ -1,10 +1,10 @@
-=RSDOWNLOADER 0.2.0
+RSDOWNLOADER 0.2.0
 
 Copyright 2009 Renaud Bourassa
-http://github.com/RenaudB/rsdownloader/
+http://github.com/renaudb/rsdownloader/
 
 
-==ABOUT
+ABOUT
 
 RSDownloader is a small script that makes it easy to download files from 
 filehosting websites. As of now, it supports fetching files from 
@@ -12,18 +12,18 @@ http://www.rapidshare.com and http://www.filestube.com. It can also search
 http://www.filestube.com for files by keyphrase.
 
 
-==DEPENDENCIES
-    
+DEPENDENCIES
+   
 - wget
 
 
-==CONFIGURATION
+CONFIGURATION
 
 You can change some of the default options by modifying the constants of 
 the configuration section of the file rsdownloader.rb.
 
 
-==USAGE
+USAGE
 
 To use the scripts, give it a list, separated by spaces, of links and/or 
 files of links of the files you want to download as argument. Each links 
@@ -51,7 +51,7 @@ Examples:
 ./rsdownloader.rb -s "Keyphrase"
 
 
-==CONTACT
+CONTACT
 
 Renaud Bourassa <To.Rhino@gmail.com>
 http://renaudbourassa.com
