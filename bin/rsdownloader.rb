@@ -388,7 +388,8 @@ class RSDownloader
   
   # Creates a new instance of RSDownloader
   def initialize
-    @opts = self.parse(ARGV)
+    @opts = parse(ARGV)
+    execute
   end
 
   # Execute an instance of RSDownloader
@@ -503,8 +504,7 @@ end
 
 # The main program
 begin
-  rsd = RSDownloader.new
-  rsd.execute
+  RSDownloader.new
 rescue Interrupt => err
   STDERR.puts "\nInterrupt signal received"
 rescue SystemExit => err
