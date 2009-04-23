@@ -507,7 +507,8 @@ begin
   rsd.execute
 rescue Interrupt => err
   STDERR.puts "\nInterrupt signal received"
-  exit(1)
+rescue SystemExit => err
+  
 rescue Exception => err
   STDERR.puts err
   exit(1)
