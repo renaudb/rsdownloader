@@ -1,0 +1,25 @@
+INSTALL WITH SETUP.RB
+
+How to install:
+  ruby setup.rb config
+  ruby setup.rb setup
+  ruby setup.rb install
+
+The quick way (as root):
+  ruby setup.rb   
+
+For more options issue:
+  ruby setup.rb help
+
+For more info on usage of the setup.rb script have a look at:
+  http://i.loveruby.net/en/projects/setup/doc/usage.html
+
+
+INSTALL WITHOUT SETUP.RB
+
+Copy the bin/rsdownloader.rb script to some suitable place preferably 
+in your $PATH
+
+
+
+  
